@@ -1,0 +1,14 @@
+﻿@model IEnumerable<Product>
+
+<section>
+  <h2>Hi, @ViewBag.UserName</h2>
+  <a asp-controller="Home" asp-action="AddProduct"><strong>Add a new product</strong></a>
+  <hr />
+  @foreach (var item in Model)
+  {
+    @item.Name
+    <a asp-controller="Home" asp-action="Details" asp-route-id="@item.id">Details</a>
+    <a asp-controller="Home" asp-action="UpdateProduct" asp-route-id="@item.id">Edit</a>
+    <br/>
+  }
+</section>

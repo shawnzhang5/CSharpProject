@@ -1,0 +1,48 @@
+﻿@model User
+@{
+  ViewData["Title"] = "Home Page";
+}
+
+<div class="container">
+  <form asp-controller="Home" asp-action="Index" method="post">
+    <div asp-validation-summary="All"></div>
+    <div class="form-group">
+      <label asp-for="UserName">Username:</label>
+      <input asp-for="UserName" />
+    </div>
+    <div class="form-group">
+      <label asp-for="Password">Password:</label>
+      <input asp-for="Password" />
+    </div>
+    <div class="form-group">
+      <label asp-for="RePassword">Confirm Password:</label>
+      <input asp-for="RePassword" />
+    </div>
+    <div class="form-group">
+      <label asp-for="Email">Email:</label>
+      <input asp-for="Email" type="email" />
+    </div>
+    <div class="form-group">
+      <label asp-for="Vendor">Are you a toy vendor?</label>
+      <input asp-for="Vendor" type="radio" name="Vendor" value="false" id="VendorN" />
+      <label asp-for="Vendor">No</label>
+      <input asp-for="Vendor" type="radio" name="Vendor" value="true" id="VendorY" />
+      <label asp-for="Vendor">Yes</label>
+    </div>
+    <div id="CustomerDisplay" style="display:none">
+      <div class="form-group">
+        <label asp-for="Age">Age:</label>
+        <input asp-for="Age" type="range" min="1" max="100" value="20" oninput="this.nextElementSibling.value = this.value" />
+        <output>20</output>
+      </div>
+      <div class="form-group">
+        <label asp-for="Gender">Gender:</label>
+        <input asp-for="Gender" type="radio" name="Gender" value="true" />
+        <label asp-for="Gender">Male</label>
+        <input asp-for="Gender" type="radio" name="Gender" value="false" />
+        <label asp-for="Gender">Female</label>
+      </div>
+    </div>
+    <input type="submit" class="btn btn-primary" value="Login" />
+  </form>
+</div>

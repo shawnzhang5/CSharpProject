@@ -1,0 +1,47 @@
+﻿@font-face {
+  font-family: cursivee;
+  src: url("../img/DancingScript-VariableFont_wght.ttf");
+}
+.borderimg {
+  border: 24px solid transparent;
+  padding: 0px;
+  border-image: url(../img/springborder.png) 15% round;
+  font-weight: bold;
+}
+
+.default {
+  width: 100%;
+  height: 100%;
+  padding: 0px;
+  margin: 0px;
+  background: black;
+  color: white;
+}
+
+.left_menu ul {
+  list-style: none;
+  font-family: cursivee;
+  font-weight: bold;
+  font-size: 24px;
+  line-height: 60px;
+  margin-top: 40px;
+}
+
+.category_img {
+  background-size: contain;
+  color: transparent;
+  width: 180px;
+  height: 180px;
+}
+
+.product1 {
+  background-image: url("../img/1.jpg");
+}
+
+.product2 {
+  background-image: url("../img/2.jpg");
+}
+
+.category {
+  border: 1px solid red;
+}

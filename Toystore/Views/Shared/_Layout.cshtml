@@ -1,0 +1,84 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Toystore</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+  <header>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow my-0 py-0">
+      <div class="container">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-collapse collapse d-xl-flex d-lg-flex d-md-flex justify-content-around align-items-center borderimg">
+          <div class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">
+              <!--rainbow text-->
+              <style>
+                .rainbow-text span {
+                  display: inline-block;
+                }
+              </style>
+
+              <div class="rainbow-text" style="font-size: 16px;
+font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+text-align:center;
+padding: 0px;
+background: #ffffff;
+font-weight: bold;
+text-shadow: 1px 1px 0px #A3A3A3;
+">
+                <span style="color:#ff00ff">H</span><span style="color:#ff00cc">o</span><span style="color:#ff0099">m</span><span style="color:#ff0066">e</span>
+              </div>
+            </a>
+          </div>
+
+
+
+          <div class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Product">
+              <!--rainbow text-->
+              <style>
+                .rainbow-text span {
+                  display: inline-block;
+                }
+              </style>
+
+              <div class="rainbow-text" style="font-size: 16px;
+font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+text-align:center;
+padding: 0px;
+background: #ffffff;
+font-weight: bold;
+text-shadow: 1px 1px 0px #A3A3A3;
+">
+                <span style="color:#ff00ff">P</span><span style="color:#ff00cc">r</span><span style="color:#ff0099">o</span><span style="color:#ff0066">d</span><span style="color:#ff0033">u</span><span style="color:#ff0000">c</span><span style="color:#ff3300">t</span><span style="color:#ff6600">s</span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <div class="container">
+    <main role="main" class="pb-3">
+      @RenderBody()
+    </main>
+  </div>
+
+  <footer class="border-top footer text-muted">
+    <div class="container">
+      &copy; 2020 - aaa - <a asp-area="" asp-controller="Home" asp-action="Product">Products</a>
+    </div>
+  </footer>
+  <script src="~/lib/jquery/dist/jquery.min.js"></script>
+  <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="~/js/site.js" asp-append-version="true"></script>
+  @RenderSection("Scripts", required: false)
+</body>
+</html>
