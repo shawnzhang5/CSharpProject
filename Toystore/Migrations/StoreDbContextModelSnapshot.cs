@@ -15,16 +15,112 @@ namespace Toystore.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.10")
+                .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "5.0.0");
+
+            modelBuilder.Entity("CartLineOrder", b =>
+                {
+                    b.Property<int>("LinesCartLineId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OrdersOrderId")
+                        .HasColumnType("int");
+
+                    b.HasKey("LinesCartLineId", "OrdersOrderId");
+
+                    b.HasIndex("OrdersOrderId");
+
+                    b.ToTable("CartLineOrder");
+                });
+
+            modelBuilder.Entity("Toystore.Models.CartLine", b =>
+                {
+                    b.Property<int>("CartLineId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<bool>("IsShipped")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("CartLineId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("CartLine");
+                });
+
+            modelBuilder.Entity("Toystore.Models.MyUser", b =>
+                {
+                    b.Property<int>("UserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<int?>("Age")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool?>("Gender")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Password")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("Vendor")
+                        .HasColumnType("bit");
+
+                    b.HasKey("UserId");
+
+                    b.HasIndex("Email")
+                        .IsUnique()
+                        .HasFilter("[Email] IS NOT NULL");
+
+                    b.HasIndex("Name")
+                        .IsUnique()
+                        .HasFilter("[Name] IS NOT NULL");
+
+                    b.ToTable("MyUser");
+                });
+
+            modelBuilder.Entity("Toystore.Models.Order", b =>
+                {
+                    b.Property<int>("OrderId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<DateTime>("OrderTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("OrderId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Order");
+                });
 
             modelBuilder.Entity("Toystore.Models.Product", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("ProductId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("Category")
                         .HasColumnType("nvarchar(max)");
@@ -38,116 +134,75 @@ namespace Toystore.Migrations
                     b.Property<string>("Photo")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("id");
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
 
-                    b.ToTable("Products");
-
-                    b.HasData(
-                        new
-                        {
-                            id = 1,
-                            Category = "Animals",
-                            Description = "",
-                            Name = "Polar Bear",
-                            Photo = ""
-                        },
-                        new
-                        {
-                            id = 2,
-                            Category = "MISC",
-                            Description = "",
-                            Name = "Piano lesson",
-                            Photo = ""
-                        },
-                        new
-                        {
-                            id = 3,
-                            Category = "MISC",
-                            Description = "",
-                            Name = "Gardening",
-                            Photo = ""
-                        },
-                        new
-                        {
-                            id = 4,
-                            Category = "Furnitures",
-                            Description = "",
-                            Name = "Workbench",
-                            Photo = ""
-                        });
-                });
-
-            modelBuilder.Entity("Toystore.Models.User", b =>
-                {
                     b.Property<int>("UserId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int?>("Age")
                         .HasColumnType("int");
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.HasKey("ProductId");
 
-                    b.Property<bool?>("Gender")
-                        .HasColumnType("bit");
+                    b.HasIndex("UserId");
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.ToTable("Product");
+                });
 
-                    b.Property<string>("RePassword")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+            modelBuilder.Entity("CartLineOrder", b =>
+                {
+                    b.HasOne("Toystore.Models.CartLine", null)
+                        .WithMany()
+                        .HasForeignKey("LinesCartLineId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.HasOne("Toystore.Models.Order", null)
+                        .WithMany()
+                        .HasForeignKey("OrdersOrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
 
-                    b.Property<bool?>("Vendor")
-                        .IsRequired()
-                        .HasColumnType("bit");
+            modelBuilder.Entity("Toystore.Models.CartLine", b =>
+                {
+                    b.HasOne("Toystore.Models.Product", "Product")
+                        .WithMany("Lines")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasKey("UserId");
+                    b.Navigation("Product");
+                });
 
-                    b.ToTable("User");
+            modelBuilder.Entity("Toystore.Models.Order", b =>
+                {
+                    b.HasOne("Toystore.Models.MyUser", "MyUser")
+                        .WithMany("Orders")
+                        .HasForeignKey("UserId");
 
-                    b.HasData(
-                        new
-                        {
-                            UserId = 1,
-                            Age = 30,
-                            Email = "aaa@example.com",
-                            Gender = false,
-                            Password = "111",
-                            RePassword = "111",
-                            UserName = "aaa",
-                            Vendor = true
-                        },
-                        new
-                        {
-                            UserId = 2,
-                            Age = 30,
-                            Email = "bbb@example.com",
-                            Gender = false,
-                            Password = "111",
-                            RePassword = "111",
-                            UserName = "bbb",
-                            Vendor = true
-                        },
-                        new
-                        {
-                            UserId = 3,
-                            Age = 30,
-                            Email = "ccc@example.com",
-                            Gender = false,
-                            Password = "111",
-                            RePassword = "111",
-                            UserName = "ccc",
-                            Vendor = false
-                        });
+                    b.Navigation("MyUser");
+                });
+
+            modelBuilder.Entity("Toystore.Models.Product", b =>
+                {
+                    b.HasOne("Toystore.Models.MyUser", "MyUser")
+                        .WithMany("Products")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MyUser");
+                });
+
+            modelBuilder.Entity("Toystore.Models.MyUser", b =>
+                {
+                    b.Navigation("Orders");
+
+                    b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("Toystore.Models.Product", b =>
+                {
+                    b.Navigation("Lines");
                 });
 #pragma warning restore 612, 618
         }

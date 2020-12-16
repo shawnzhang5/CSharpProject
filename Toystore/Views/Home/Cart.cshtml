@@ -1,0 +1,54 @@
+﻿@model Cart
+@inject IOrderRepository foo
+
+<h2>Your cart</h2>
+<table class="table table-bordered table-striped">
+  <thead>
+    <tr>
+      <th>Quantity</th>
+      <th>Item</th>
+      <th class="text-right">Price</th>
+      <th class="text-right">Subtotal</th>
+    </tr>
+  </thead>
+  <tbody>
+    @foreach (var line in Model.Lines)
+    {
+<tr>
+  <td class="text-center">@line.Quantity</td>
+  <td class="text-left">@line.Product.Name</td>
+  <td class="text-right">@line.Product.Price.ToString("c")</td>
+  <td class="text-right">@((line.Quantity * line.Product.Price).ToString("c"))</td>
+  <td class="text-center">
+    <a asp-controller="Home" asp-action="CartRemove" asp-route-productId="@line.Product.ProductId" class="btn btn-sm btn-danger">Remove</a>
+    <a asp-controller="Home" asp-action="Details" asp-route-productId="@line.Product.ProductId" class="btn btn-sm btn-success">Details</a>
+  </td>
+</tr>}
+  </tbody>
+  <tfoot>
+    <tr>
+      <td colspan="3" class="text-right">Total:</td>
+@if (foo.CheckFirstOrder(Model.GetSessionId()))
+{
+<td class="text-right text-danger">
+  @((Model.ComputeTotalValue() * 0.9).ToString("c"))&nbsp;<s>@Model.ComputeTotalValue().ToString("c")</s>
+</td>
+      }
+      else
+      {
+<td class="text-right">
+      @Model.ComputeTotalValue().ToString("c")
+</td>
+      }
+</tr>
+  </tfoot>
+</table>
+@if (Model.GetSessionId() == null)
+{
+<div class="text-center text-danger">* Sign Up, Get 10% OFF On Your First Order!</div>}
+<br />
+<div class="text-center">
+  <a class="btn btn-primary" href="@(Settings.ReturnUrl ?? "/")">Continue shopping</a>
+  <a class="btn btn-primary" asp-action="OrderConfirm" asp-controller="Home">Checkout</a>
+</div>
+

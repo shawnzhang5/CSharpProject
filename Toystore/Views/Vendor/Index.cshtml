@@ -1,0 +1,54 @@
+﻿@model MyUser
+
+<section>
+  <div class="bg-info text-white p-2">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col">
+          <span class="navbar-brand ml-2">Welcome, @Model.Name</span>
+        </div>
+        <div class="col-4 text-right">
+          <a class="btn btn-sm btn-success" href="/Home/Cart">View My Cart</a>&nbsp;&nbsp;
+          <a class="btn btn-sm btn-primary" href="/Account/Logout">Log Out</a>
+        </div>
+        <div class="col-1"></div>
+      </div>
+    </div>
+  </div>
+
+
+  <h3 class="bg-primary text-white text-center p-2">Vendor Home</h3>
+  <a asp-controller="Vendor" asp-action="AddProduct" asp-route-userId="@Model.UserId" class="badge badge-pill badge-danger"><h6>&nbsp;Add a new product&nbsp;</h6></a>
+  <hr />
+  <h4><strong>My Products:</strong></h4>
+  <table class="table table-sm table-striped table-bordered">
+    <tbody>
+      <tr><th>Name</th><th></th></tr>
+      @foreach (var item in Model.Products)
+      {
+        <tr>
+          <td>@item.Name</td>
+          <td>
+            <a asp-controller="Home" asp-action="Details" asp-route-productId="@item.ProductId" class="btn btn-outline-dark btn-sm">Details</a>&nbsp;
+            <a asp-controller="Vendor" asp-action="UpdateProduct" asp-route-productId="@item.ProductId" class="btn btn-outline-dark btn-sm">Edit</a>&nbsp;
+            @if (item.Lines.Count() > 0)
+            {
+              if (item.Lines.Count(l => l.IsShipped == true) == item.Lines.Count())
+              {
+                <a asp-action="ShipProduct" asp-controller="Vendor" asp-route-productId="@item.ProductId" class="btn btn-success btn-sm">Sold Item(s):&nbsp;@item.Lines.Sum(l => l.Quantity)</a>
+              }
+              else
+              {
+          <a asp-action="ShipProduct" asp-controller="Vendor" asp-route-productId="@item.ProductId" class="btn btn-warning btn-sm">Sold Item(s):&nbsp;@item.Lines.Sum(l => l.Quantity)&nbsp;UnShipped Item(s):&nbsp;@item.Lines.Count(l => l.IsShipped == false)</a>
+              }
+            }
+            else
+            {
+              <div class="btn btn-outline-dark btn-sm">Sold Item(s):&nbsp;@item.Lines.Sum(l => l.Quantity)</div>
+            }
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</section>

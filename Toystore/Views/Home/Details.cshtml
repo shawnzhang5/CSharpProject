@@ -1,6 +1,36 @@
 ﻿@model Product
+@inject Cart foo
 
 <section>
-  <strong>@Model.Name</strong><br />
-  <img src="@Model.Photo" alt="@Model.Name">
+  <br />
+  <a href="@(Settings.ReturnUrl ?? "/")" class="btn btn-outline-dark btn-sm float-right mr-5"><h6>Back</h6></a>
+  <h3><strong>@Model.Name</strong></h3>
+  <img src="@Model.Photo" alt="@Model.Name"><br />
+  <form name="myForm" onsubmit="return validateForm()" asp-action="Cart" asp-controller="Home" method="post">
+    <input type="hidden" asp-for="ProductId" />
+    <input type="hidden" asp-for="Name" />
+    <input type="hidden" asp-for="Category" />
+    <input type="hidden" asp-for="Description" />
+    <input type="hidden" asp-for="Price" />
+    <input type="hidden" asp-for="Photo" />
+    <input type="hidden" asp-for="UserId" />
+    <button type="submit" class="btn btn-danger">
+      Add To Cart
+    </button>
+  </form>
 </section>
+
+<script>
+  function validateForm()
+  {
+    var x = document.forms["myForm"]["Name"].value;
+    @{
+      int? userId = foo.GetSessionId();
+      if (userId == (Model.MyUser?.UserId??-1))
+      {
+        @:alert("You are the vendor who owns this item!");
+        @:return false;
+      }
+    }
+   }
+</script>

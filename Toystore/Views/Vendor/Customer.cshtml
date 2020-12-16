@@ -1,0 +1,102 @@
+﻿@model MyUser
+
+
+<section>
+  <div class="bg-info text-white p-2">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col">
+          <span class="navbar-brand ml-2">Welcome, @Model.Name</span>
+        </div>
+        <div class="col-4 text-right">
+          <a class="btn btn-sm btn-success" href="/Home/Cart">View My Cart</a>&nbsp;&nbsp;
+          <a class="btn btn-sm btn-primary" href="/Account/Logout">Log Out</a>
+        </div>
+        <div class="col-1"></div>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="bg-warning text-white text-center p-2">Customer Home</h3>
+  <h4><strong>My Orders:</strong></h4>
+  @{ int n = 0;}
+  @foreach (var order in Model.Orders.Where(o => (o.UserId ?? -1) == Model.UserId).OrderByDescending(o => o.OrderId))
+  {
+    <div id="@n" class="btn btn-block btn-outline-secondary m-3">
+      <h4>
+        <span class="col-3">@order.OrderTime</span>
+        <span class="col-3">@order.Lines.Sum(l => l.Quantity) item(s)</span>
+        <span class="col-3">@order.Lines.Sum(l => l.Product.Price * l.Quantity).ToString("c")</span>
+        <span class="col-3 text-success">@(order.Lines.Count(l => l.IsShipped == false) == 0 ? "Shipped!" : "")</span>
+      </h4>
+    </div>
+    n++;
+    <div id="@n" style="display:none">
+      <table class="table table-bordered table-hover">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Quantity</th>
+            <th class="text-right">Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach (var line in order.Lines)
+          {
+            <tr>
+              <td class="text-left">@line.Product.Name</td>
+              <td class="text-center">@line.Quantity</td>
+              <td class="text-right">@line.Product.Price.ToString("c")</td>
+            </tr>
+          }
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="2" class="text-center">
+              <a asp-action="DelOrder" asp-controller="Vendor" asp-route-orderId="@order.OrderId" onclick="return validateForm()" class="btn btn-danger btn-sm">Cancel Order</a>
+              <span class="float-right">Total:</span>
+            </td>
+            <td class="text-right">@order.Lines.Sum(l => l.Product.Price * l.Quantity).ToString("c")</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    n++;
+  }
+</section>
+
+
+
+
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+  @for (int m=0; m<n ; m += 2) {
+  @:$(document).ready(function() {
+  @:  $("#@m").click(function() {
+  @:    $("#@(m+1)").slideToggle("slow");
+  @:    });
+  @:  });
+  }
+
+  function validateForm()
+  {
+    @foreach(var order in Model.Orders.Where(o => (o.UserId ?? -1) == Model.UserId))
+    {
+      foreach (var line in order.Lines)
+      {
+        if(line.IsShipped)
+        {
+          @:alert("Item(s) have been shipped!");
+          @:return false;
+        }
+      }
+    }
+    var r = confirm("Are you sure you want to cancel this order?");
+    if (r == true) { return true; }
+    else { return false; }
+  }
+</script>
+
+
+

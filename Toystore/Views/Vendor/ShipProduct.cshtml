@@ -1,0 +1,31 @@
+﻿@model Product
+
+<section>
+  <br />
+  <a asp-controller="Vendor" asp-action="Index" class="btn btn-outline-dark btn-sm float-right mr-5"><h6>Back</h6></a>
+  <h3><strong>@Model.Name</strong></h3>
+  <img src="@Model.Photo" alt="@Model.Name"><br /><br />
+  <table class="table table-sm table-striped table-bordered">
+    <tbody>
+      <tr><th>Order Date</th><th>Quantity</th><th>Customer</th></tr>
+      @foreach (var item in Model.Lines.Where(l => l.ProductId == Model.ProductId))
+      {
+        <tr>
+          <td>@item.Orders.FirstOrDefault().OrderTime</td>
+          <td>@item.Quantity</td>
+          <td>@(item.Orders.FirstOrDefault().UserId == null ? "Anonymous" : item.Orders.FirstOrDefault().MyUser.Name)</td>
+          <td>
+            @if (item.IsShipped)
+            {
+              <div class="btn btn-outline-dark btn-sm">Shipped!</div>
+            }
+            else
+            {
+              <a asp-controller="Vendor" asp-action="Ship" asp-route-cartlineId="@item.CartLineId" class="btn btn-danger btn-outline-dark btn-sm text-white">Ship</a>
+            }
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</section>

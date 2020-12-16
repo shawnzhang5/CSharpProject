@@ -11,6 +11,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Net.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
 
 namespace Toystore
 {
@@ -30,10 +32,19 @@ namespace Toystore
         options.UseSqlServer(
           _configuration["ConnectionStrings:AzureConnection"]);
       });
-      services.AddScoped<IUserRepository,EFUserRepository>();
+      services.AddScoped<Cart>(options => SessionCart.GetCart(options));
+      services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+      services.AddScoped<IMyUserRepository, EFMyUserRepository>();
       services.AddScoped<IProductRepository, EFProductRepository>();
-      services.AddSingleton<Options>(_configuration.Get<Options>());
+      services.AddScoped<IOrderRepository, EFOrderRepository>();
+      services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<StoreDbContext>();
+      services.AddSingleton<Settings>(_configuration.Get<Settings>());
       services.AddSingleton<HttpClient>(new HttpClient());
+      services.AddDistributedMemoryCache(); //Session
+      services.AddSession(options =>
+      {
+        options.IdleTimeout = TimeSpan.FromMinutes(20);
+      });   //Session
       services.AddControllersWithViews();
     }
 
@@ -52,20 +63,22 @@ namespace Toystore
       }
       app.UseHttpsRedirection();
       app.UseStaticFiles();
-
+      app.UseSession();   //Session
       app.UseRouting();
 
+      app.UseAuthentication();
       app.UseAuthorization();
 
       app.UseEndpoints(endpoints =>
       {
-        endpoints.MapControllerRoute(
-          "pagination",
-          "Product/Page{productPage}",
-          new { Controller = "Home", Action = "Product"}
-          );
+        endpoints.MapControllerRoute("catpage", "{category}/Page{productPage}", new { Controller = "Home", Action = "Product" });
+        endpoints.MapControllerRoute("page", "Page{productPage}", new { Controller = "Home", Action = "Product"});
+        endpoints.MapControllerRoute("category", "{category}", new { Controller = "Home", Action = "Product"});
+        endpoints.MapControllerRoute("pagination", "Product/Page{productPage}", new { Controller = "Home", Action = "Product"});
         endpoints.MapDefaultControllerRoute();
       });
+
+      //SeedData.EnsurePopulated(app);
     }
   }
 }

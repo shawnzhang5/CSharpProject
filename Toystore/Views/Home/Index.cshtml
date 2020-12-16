@@ -1,48 +1,47 @@
-﻿@model User
-@{
-  ViewData["Title"] = "Home Page";
-}
+﻿@inject Cart foo
 
-<div class="container">
-  <form asp-controller="Home" asp-action="Index" method="post">
-    <div asp-validation-summary="All"></div>
-    <div class="form-group">
-      <label asp-for="UserName">Username:</label>
-      <input asp-for="UserName" />
-    </div>
-    <div class="form-group">
-      <label asp-for="Password">Password:</label>
-      <input asp-for="Password" />
-    </div>
-    <div class="form-group">
-      <label asp-for="RePassword">Confirm Password:</label>
-      <input asp-for="RePassword" />
-    </div>
-    <div class="form-group">
-      <label asp-for="Email">Email:</label>
-      <input asp-for="Email" type="email" />
-    </div>
-    <div class="form-group">
-      <label asp-for="Vendor">Are you a toy vendor?</label>
-      <input asp-for="Vendor" type="radio" name="Vendor" value="false" id="VendorN" />
-      <label asp-for="Vendor">No</label>
-      <input asp-for="Vendor" type="radio" name="Vendor" value="true" id="VendorY" />
-      <label asp-for="Vendor">Yes</label>
-    </div>
-    <div id="CustomerDisplay" style="display:none">
-      <div class="form-group">
-        <label asp-for="Age">Age:</label>
-        <input asp-for="Age" type="range" min="1" max="100" value="20" oninput="this.nextElementSibling.value = this.value" />
-        <output>20</output>
-      </div>
-      <div class="form-group">
-        <label asp-for="Gender">Gender:</label>
-        <input asp-for="Gender" type="radio" name="Gender" value="true" />
-        <label asp-for="Gender">Male</label>
-        <input asp-for="Gender" type="radio" name="Gender" value="false" />
-        <label asp-for="Gender">Female</label>
+<section>
+  <div class="sanfran sanfran-highcontrast text-white px-5 pt-2">
+    <h2><i class="fab fa-earlybirds fa-2x"></i><strong>&nbsp;&nbsp;Toy Store</strong></h2>
+    <div class="row">
+      <div class="col-sm-8 py-4 px-xl-5 px-lg-4 px-md-3 px-sm-1 px-0"><span class="display-4">GET 10% OFF ON YOUR FIRST ORDER WITH A REGISTRATION</span></div>
+      <div class="col-sm-4 pt-0 pb-4 d-flex flex-wrap justify-content-center">
+        <div class="card text-body" style="width:250px">
+          <div class="card-body">
+            @if (foo.GetSessionVendor() == 1 || foo.GetSessionVendor() == 0)
+            {<vc:cart-summary />}
+            else
+            {<vc:login />}
+          </div>
+        </div>
       </div>
     </div>
-    <input type="submit" class="btn btn-primary" value="Login" />
-  </form>
-</div>
+  </div>
+  <br />
+  <!--Carousel-->
+  <div id="carouselExampleControls" class="carousel slide col-10 offset-1" data-ride="carousel">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <a asp-action="Cart" asp-controller="Home" asp-route-bulkId="1"><img class="d-block w-100 carousel_img" src="~/img/scene1.jpg" alt="First slide"></a>
+      </div>
+      <div class="carousel-item">
+        <a asp-action="Cart" asp-controller="Home" asp-route-bulkId="2"><img class="d-block w-100 carousel_img" src="~/img/scene2.jpg" alt="Second slide"></a>
+      </div>
+      <div class="carousel-item">
+        <a asp-action="Cart" asp-controller="Home" asp-route-bulkId="3"><img class="d-block w-100 carousel_img" src="~/img/scene3.jpg" alt="Third slide"></a>
+      </div>
+      <div class="carousel-item">
+        <a asp-action="Cart" asp-controller="Home" asp-route-bulkId="4"><img class="d-block w-100 carousel_img" src="~/img/scene4.jpg" alt="Fourth slide"></a>
+      </div>
+    </div>
+    <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="sr-only">Next</span>
+    </a>
+    <br />
+  </div>
+</section>

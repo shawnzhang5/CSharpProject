@@ -1,0 +1,55 @@
+﻿@model RegisterModel
+
+<section>
+  <div class="bg-dark text-white p-2">
+    <span class="navbar-brand ml-2">TOYS STORE</span>
+  </div>
+  <div class="m-1 p-1">
+    <div class="text-danger" asp-validation-summary="All"></div>
+
+    <form asp-action="Register" asp-controller="Account" method="post">
+      <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+      </div>
+      <div class="form-group">
+        <label asp-for="Email"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+      </div>
+      <div class="form-group">
+        <label asp-for="Password"></label>
+        <input asp-for="Password" class="form-control" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+      </div>
+      <div class="form-group">
+        <label asp-for="ConfirmPassword"></label>
+        <input asp-for="ConfirmPassword" class="form-control" />
+        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+      </div>
+      <div class="form-group">
+        <label asp-for="Vendor">Are you a toy vendor?</label>
+        <input asp-for="Vendor" type="radio" name="Vendor" value="false" id="VendorN" />
+        <label asp-for="Vendor">No</label>
+        <input asp-for="Vendor" type="radio" name="Vendor" value="true" id="VendorY" />
+        <label asp-for="Vendor">Yes</label>
+      </div>
+      <div id="CustomerDisplay" style="display:none">
+        <div class="form-group">
+          <label asp-for="Age">Age:</label>
+          <input asp-for="Age" type="range" min="1" max="100" value="20" oninput="this.nextElementSibling.value = this.value" />
+          <output>20</output>
+        </div>
+        <div class="form-group">
+          <label asp-for="Gender">Gender:</label>
+          <input asp-for="Gender" type="radio" name="Gender" value="true" />
+          <label asp-for="Gender">Male</label>
+          <input asp-for="Gender" type="radio" name="Gender" value="false" />
+          <label asp-for="Gender">Female</label>
+        </div>
+      </div>
+      <input type="submit" class="btn btn-primary" value="Register" />
+    </form>
+  </div>
+</section>

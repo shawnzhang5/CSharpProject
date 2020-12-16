@@ -19,12 +19,6 @@
           <div class="nav-item">
             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">
               <!--rainbow text-->
-              <style>
-                .rainbow-text span {
-                  display: inline-block;
-                }
-              </style>
-
               <div class="rainbow-text" style="font-size: 16px;
 font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 text-align:center;
@@ -43,12 +37,6 @@ text-shadow: 1px 1px 0px #A3A3A3;
           <div class="nav-item">
             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Product">
               <!--rainbow text-->
-              <style>
-                .rainbow-text span {
-                  display: inline-block;
-                }
-              </style>
-
               <div class="rainbow-text" style="font-size: 16px;
 font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 text-align:center;
@@ -61,6 +49,10 @@ text-shadow: 1px 1px 0px #A3A3A3;
               </div>
             </a>
           </div>
+          <partial name="_Navpartial" />
+
+
+
         </div>
       </div>
     </nav>
@@ -73,12 +65,13 @@ text-shadow: 1px 1px 0px #A3A3A3;
 
   <footer class="border-top footer text-muted">
     <div class="container">
-      &copy; 2020 - aaa - <a asp-area="" asp-controller="Home" asp-action="Product">Products</a>
+      &copy; 2020 - Shawn Zhang - <a asp-controller="Home" asp-action="Privacy">Privacy</a>
     </div>
   </footer>
   <script src="~/lib/jquery/dist/jquery.min.js"></script>
   <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <script src="~/js/site.js" asp-append-version="true"></script>
+  <script src="https://kit.fontawesome.com/6b1303b8b2.js" crossorigin="anonymous"></script>
   @RenderSection("Scripts", required: false)
 </body>
 </html>

@@ -1,42 +1,32 @@
 ﻿@model ProductsListViewModel
+@{ Settings.ReturnUrl = ViewContext.HttpContext.Request.PathAndQuery();}
 
-<section class="default">
+<section>
   <div class="row"><img src="~/img/banner.jpg" alt="banner" class="container-fluid img-fluid" /></div>
   <div class="row">
     <div class="col-xl-2 col-lg-2 col-md-3 col-sm-4 col-4 left_menu">
-      <ul>
-        <li><a asp-controller="Home" asp-action="Product">Animals</a></li>
-        <li>Funitures</li>
-        <li>Houses</li>
-        <li>Misc</li>
-      </ul>
+      <vc:navigation-menu />
+      <vc:random-product /><br />
     </div>
-    <div class="col-xl-10 col-lg-10 col-md-9 col-sm-8 col-8">
+    <div class="col-xl-10 col-lg-10 col-md-9 col-sm-8 col-8 px-xl-5 px-lg-5 px-md-2 px-sm-1 px-0 py-4">
       <article class="card-columns">
         @foreach (var item in Model.Products)
         {
           <div class="card">
-            <a asp-controller="Home" asp-action="Details" asp-route-id="@item.id"><img src="@item.Photo" class="card-img-top" alt="@item.Name"></a>
-            <div class="card-body">
-              <h5 class="card-title">
-                <a asp-controller="Home" asp-action="Details" asp-route-id="@item.id">@item.Name</a>
-              </h5>
-              <p class="card-text">
-                <small class="text-muted">
-                  @item.Description
-                </small>
-              </p>
-            </div>
-            <div class="card-footer">
-
-            </div>
+            <a asp-controller="Home" asp-action="Details" asp-route-productId="@item.ProductId"><img src="@item.Photo" class="card-img-top product_img" alt="@item.Name"></a>
+            <h5>
+              <a asp-controller="Home" asp-action="Details" asp-route-productId="@item.ProductId">@item.Name</a>
+              <span class="badge badge-pill badge-primary" style="float:right"><small>@item.Price.ToString("c")</small></span>
+            </h5>
           </div>
+
         }
       </article>
-      <div page-model="@Model.PagingInfo" page-action="Product"
-           page-classes-enabled="true"
+      <br />
+      <div page-model="@Model.PagingInfo" page-action="Product" page-classes-enabled="true"
            page-class="btn" page-class-normal="btn-outline-dark"
-           page-class-selected="btn-primary" class="btn-group pull-right m-1">
+           page-class-selected="btn-primary" page-url-category="@Model.CurrentCategory"
+           class="btn-group pull-right m-1">
       </div>
     </div>
   </div>

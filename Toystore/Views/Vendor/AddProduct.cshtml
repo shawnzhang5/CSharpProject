@@ -1,0 +1,38 @@
+﻿@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+@model Product2
+
+<section>
+  <form asp-controller="Vendor" asp-action="AddProduct" method="post" enctype="multipart/form-data">
+    <div class="text-danger" asp-validation-summary="All"></div>
+    <input type="hidden" asp-for="UserId" />
+    <div class="form-group">
+      <label asp-for="Name">Product Name:</label>
+      <input asp-for="Name" />
+    </div>
+    <div class="form-group">
+      <label asp-for="Category">Category:</label>
+      <input asp-for="Category" />
+    </div>
+    <div class="form-group">
+      <label asp-for="Description">Description:</label>
+      <input asp-for="Description" />
+    </div>
+    <div class="form-group">
+      <label asp-for="Price">Price: $</label>
+      <input asp-for="Price" type="number" />
+    </div>
+    <div class="card">
+      <div class="card-header text-dark">
+        Upload a new image
+      </div>
+      <div class="card-body">
+        <div class="custom-file">
+          <input type="file" class="custom-file-input" asp-for="Upload">
+          <label class="custom-file-label">Choose image</label>
+        </div>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-secondary">Upload</button>
+  </form>
+</section>

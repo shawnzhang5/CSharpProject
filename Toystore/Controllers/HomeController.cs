@@ -13,95 +13,128 @@ namespace Toystore.Controllers
   public class HomeController : Controller
   {
     private readonly ILogger<HomeController> _logger;
-    private IUserRepository _userrepo;
     private IProductRepository _productrepo;
+    private IOrderRepository _orderrepo;
+    private Cart _cart;
 
-    public HomeController(ILogger<HomeController> logger, IUserRepository userrepo, IProductRepository productrepo)
+    public HomeController(ILogger<HomeController> logger, IProductRepository productrepo, IOrderRepository orderrepo, Cart cartservice)
     {
       _logger = logger;
-      _userrepo = userrepo;
       _productrepo = productrepo;
+      _orderrepo = orderrepo;
+      _cart = cartservice;
     }
 
-    [HttpGet]
     public IActionResult Index()
     {
       return View();
     }
-    [HttpPost]
-    public async Task<IActionResult> Index(User user)
-    {
-      if (ModelState.IsValid)
-      {
-        if (user.Vendor == true)
-        {
-          ViewBag.UserName = user.UserName;
-          List<Product> products = await _productrepo.GetProductsAsync();
-          return View("VendorHome", products
-            .Where(p => p.Vendor == user.UserName));
-        }
-        else if (user.Vendor == false)
-        {
-          return RedirectToAction("Product");
-        }
-        else
-        {
-          return View(user);
-        }
-      }
-      else
-      {
-        return View(user);
-      }
-    }
 
-    public async Task<IActionResult> Product(int productPage = 1)
+    public async Task<IActionResult> Product(string category, int productPage = 1)
     {
       List<Product> products = await _productrepo.GetProductsAsync();
-      int PageSize = 4;
+      int PageSize = 3;
       return View(new ProductsListViewModel
       {
         Products = products
-                   .OrderBy(p => p.id)
+                   .Where(p => category == null || p.Category == category)
+                   .OrderBy(p => p.ProductId)
                    .Skip((productPage - 1) * PageSize)
                    .Take(PageSize),
         PagingInfo = new PagingInfo
         {
           CurrentPage = productPage,
           ItemsPerPage = PageSize,
-          TotalItems = products.Count
-        }
+          TotalItems = category == null ? products.Count() : products.Where(p => p.Category == category).Count()
+        },
+        CurrentCategory = category
       });
     }
 
-    public IActionResult Details(int id = 1)
+    public IActionResult Details(int productId = 1)
     {
-      return View(_productrepo.GetProductById(id));
+      return View(_productrepo.GetProductById(productId));
     }
 
     [HttpGet]
-    public IActionResult UpdateProduct(int id)
+    public async Task<IActionResult> Cart(int bulkId)
     {
-      return View(_productrepo.GetProductById(id));
+      if (bulkId != 0)
+      {
+        _cart.Clear();
+        List<Product> products = await _productrepo.GetProductsAsync();
+        switch (bulkId)
+        {
+          case 1:
+            products = products.Where(p => p.Name == "Cake shop" || p.Name == "Candy wagon" || p.Name == "Fruit wagon" || p.Name == "Fruit wagon" || p.Name == "Bear family" || p.Name == "Rabbit family" || p.Name == "Squirrel family").ToList();
+            foreach (var p in products)
+            {
+              _cart.AddItem(p, 1);
+            }
+            break;
+          case 2:
+            products = products.Where(p => p.Name == "Rabbit family" || p.Name == "Cruise car" || p.Name == "Town house").ToList();
+            foreach (var p in products)
+            {
+              _cart.AddItem(p, 1);
+            }
+            break;
+          case 3:
+            products = products.Where(p => p.Name == "Cat family" || p.Name == "Log cabin" || p.Name == "Rabbit family" || p.Name == "Cruise car" || p.Name == "Squirrel family" || p.Name == "Tree house").ToList();
+            foreach (var p in products)
+            {
+              _cart.AddItem(p, 1);
+            }
+            break;
+          case 4:
+            products = products.Where(p => p.Name == "Bath room set" || p.Name == "Children's bedroom" || p.Name == "Dining room set" || p.Name == "Cat family" || p.Name == "Squirrel family" || p.Name == "Living room set" || p.Name == "Rabbit family" || p.Name == "Town house").ToList();
+            foreach (var p in products)
+            {
+              _cart.AddItem(p, 1);
+            }
+            break;
+          default:
+            return View(_cart);
+        }
+      }
+      return View(_cart);
     }
     [HttpPost]
-    public IActionResult UpdateProduct(Product p)
+    public IActionResult Cart(Product product)
     {
-      return View("Details",_productrepo.UpdateProduct(p));
+      _cart.AddItem(product, 1);
+      return View(_cart);
     }
-    [HttpGet]
-    public IActionResult AddProduct()
+    public IActionResult CartRemove(int productId)
+    {
+      _cart.RemoveLine(_cart.Lines.FirstOrDefault(p => p.Product.ProductId == productId).Product);
+      return Redirect("/Home/Cart");
+    }
+
+    [HttpGet] 
+    public IActionResult Order()
     {
       return View();
     }
     [HttpPost]
-    public IActionResult AddProduct(Product p)
+    public IActionResult Order(Order order)
     {
-      return View("Details", _productrepo.AddProduct(p));
+      _orderrepo.AddOrder(_cart, order);
+      _cart.Clear();
+      return View(order);
+    }
+
+    public IActionResult OrderConfirm()
+    {
+      return View();
     }
 
 
 
+    public IActionResult Privacy()
+    {
+      return View();
+    }
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {

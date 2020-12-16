@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\aaa\\source\\repos\\aaa\\Toystore\\Toystore.csproj": {}
+    "C:\\Users\\aaa\\source\\repos\\bbb\\Toystore\\Toystore.csproj": {}
   },
   "projects": {
-    "C:\\Users\\aaa\\source\\repos\\aaa\\Toystore\\Toystore.csproj": {
+    "C:\\Users\\aaa\\source\\repos\\bbb\\Toystore\\Toystore.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\aaa\\source\\repos\\aaa\\Toystore\\Toystore.csproj",
+        "projectUniqueName": "C:\\Users\\aaa\\source\\repos\\bbb\\Toystore\\Toystore.csproj",
         "projectName": "Toystore",
-        "projectPath": "C:\\Users\\aaa\\source\\repos\\aaa\\Toystore\\Toystore.csproj",
+        "projectPath": "C:\\Users\\aaa\\source\\repos\\bbb\\Toystore\\Toystore.csproj",
         "packagesPath": "C:\\Users\\aaa\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\aaa\\source\\repos\\aaa\\Toystore\\obj\\",
+        "outputPath": "C:\\Users\\aaa\\source\\repos\\bbb\\Toystore\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\aaa\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -42,15 +42,19 @@
               "target": "Package",
               "version": "[3.0.0, )"
             },
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
-              "version": "[3.1.10, )"
+              "version": "[5.0.0, )"
             },
             "Microsoft.EntityFrameworkCore.Tools": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[3.1.10, )"
+              "version": "[5.0.0, )"
             }
           },
           "imports": [

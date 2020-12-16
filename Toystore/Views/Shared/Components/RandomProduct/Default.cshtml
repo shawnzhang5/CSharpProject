@@ -1,0 +1,8 @@
+﻿@model Product
+
+  <div id="random_product">
+    <h5 class="text-center"><strong>You might like</strong></h5>
+    <a asp-controller="Home" asp-action="Details" asp-route-productId="@Model.ProductId"><img src="@Model.Photo" class="card-img-top product_img2" alt="@Model.Name"></a>
+    <br />
+    <h5><a asp-controller="Home" asp-action="Details" asp-route-id="@Model.ProductId">@Model.Name</a></h5>
+  </div>

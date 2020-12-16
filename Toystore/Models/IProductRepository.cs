@@ -11,8 +11,8 @@ namespace Toystore.Models
 
     Product GetProductById(int id);
 
-    Product UpdateProduct(Product product);
+    void UpdateProduct(Product product);
 
-    Product AddProduct(Product product);
+    Task<Product> AddProductAsync(Product2 product);
   }
 }

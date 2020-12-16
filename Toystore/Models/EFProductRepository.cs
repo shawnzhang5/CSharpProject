@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace Toystore.Models
@@ -12,21 +13,21 @@ namespace Toystore.Models
   {
     private StoreDbContext _context;
     private HttpClient _httpClient;
-    private Options _options;
-    public EFProductRepository(StoreDbContext context, HttpClient httpClient, Options options)
+
+    public EFProductRepository(StoreDbContext context, HttpClient httpClient)
     {
       _context = context;
       _httpClient = httpClient;
-      _options = options;
     }
     public async Task<List<Product>> GetProductsAsync()
     {
-      List<Product> products = await _context.Products.ToListAsync<Product>();
-      var imagesUrl = _options.ApiUrl;
+      var imagesUrl = Settings.ApiUrl;
       string imagesJson = await _httpClient.GetStringAsync(imagesUrl);
       IEnumerable<string> ImagesList = JsonConvert.DeserializeObject<IEnumerable<string>>(imagesJson);
       List<string> imageList = ImagesList.ToList<string>();
       //List<string> imageList = ImagesList.OrderByDescending(c => c).ToList<string>();
+
+      List<Product> products = await _context.Products.ToListAsync<Product>();
       for (int i = 0; i < (products.Count <= imageList.Count ? products.Count : imageList.Count); i++)
       {
         products.ElementAt(i).Photo = imageList.ElementAt(i);
@@ -37,26 +38,46 @@ namespace Toystore.Models
 
     public Product GetProductById(int id)
     {
-      Product product = _context.Products.Where(p => p.id == id).FirstOrDefault();
+      Product product = _context.Products
+        .Include(p => p.MyUser).DefaultIfEmpty()
+        .Include(p => p.Lines)
+          .ThenInclude(l => l.Orders)
+            .ThenInclude(o => o.MyUser).DefaultIfEmpty()
+        .FirstOrDefault(p => p.ProductId == id);
       return product;
     }
-    public Product UpdateProduct(Product product)
+    public void UpdateProduct(Product product)
     {
-      Product dbproduct = _context.Products.Where(p => p.id == product.id).FirstOrDefault();
+      Product dbproduct = _context.Products.Where(p => p.ProductId == product.ProductId).FirstOrDefault();
       if(dbproduct != null)
       {
         dbproduct.Name = product.Name;
         dbproduct.Category = product.Category;
         dbproduct.Description = product.Description;
+        dbproduct.Price = product.Price;
         _context.SaveChanges();
       }
-      return dbproduct;
     }
-    public Product AddProduct(Product product)
+    public async Task<Product> AddProductAsync(Product2 p2)
     {
-      _context.Products.Add(product);
+      Product p1 = new Product
+      {
+        Name = p2.Name,
+        Category = p2.Category,
+        Description = p2.Description,
+        UserId = p2.UserId
+      };
+      _context.Products.Add(p1);
       _context.SaveChanges();
-      return product;
+      //image upload to blob storage
+      var imagesUrl = Settings.ApiUrl;
+      using (var image = new StreamContent(p2.Upload.OpenReadStream()))
+      {
+        image.Headers.ContentType = new MediaTypeHeaderValue(p2.Upload.ContentType);
+        var response = await _httpClient.PostAsync(imagesUrl, image);
+      }
+
+      return p1;
     }
   }
 }

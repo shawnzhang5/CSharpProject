@@ -1,0 +1,13 @@
+﻿@model Order
+
+<section>
+  <div class="text-center">
+    <h1>Assume Address And Payment Content Here</h1>
+    <h1>Are you sure you want to place this order?</h1>
+    <form asp-action="Order" asp-controller="Home" method="post">
+      <input type="hidden" asp-for="OrderTime" value="@DateTime.Now" />
+      <button type="submit" class="btn btn-outline-secondary">Yes, Place Order</button>
+      <a asp-action="Cart" asp-controller="Home" class="btn btn-outline-secondary">No, Modify Cart</a>
+    </form>
+  </div>
+</section>
